@@ -66,7 +66,7 @@ async function pollEvents() {
       if (payload && chrome.notifications?.create) {
         chrome.notifications.create(ev.id, {
           type: "basic",
-          iconUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+          iconUrl: chrome.runtime.getURL("icon-128.png"),
           title: payload.title,
           message: payload.message,
         });

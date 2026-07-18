@@ -5,12 +5,13 @@ export function BypassLoginButton() {
     <button
       className="btn secondary"
       type="button"
+      style={{ width: "100%" }}
       onClick={async () => {
         const res = await fetch("/api/auth/bypass", { method: "POST" });
         if (res.ok) {
           window.location.href = "/dashboard";
         } else {
-          alert("Bypass login failed");
+          alert("Demo sign-in failed. Is AUTH_BYPASS enabled?");
         }
       }}
     >

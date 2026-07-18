@@ -1,47 +1,380 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-      body {
-        font: 13px system-ui, sans-serif;
-        margin: 12px;
-        width: 280px;
-        color: #202124;
+      :root {
+        --paper: #eef1f6;
+        --paper-deep: #e2e7ef;
+        --surface: #fafbfc;
+        --ink: #141820;
+        --ink-soft: #3d4654;
+        --muted: #6b7382;
+        --line: #cfd6e2;
+        --line-soft: #e4e8f0;
+        --signal: #2f4fbf;
+        --signal-soft: #dfe6fb;
+        --reply: #1a6b5c;
+        --danger: #a33b3b;
+        --radius: 12px;
+        --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+          serif;
+        --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
       }
-      label {
-        display: block;
-        margin: 8px 0;
-      }
-      input[type="text"] {
-        width: 100%;
+
+      * {
         box-sizing: border-box;
       }
-      button {
-        margin-top: 8px;
+
+      body {
+        margin: 0;
+        width: 320px;
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 13px;
+        line-height: 1.45;
+        background:
+          radial-gradient(280px 120px at 100% 0%, #d9e2f7 0%, transparent 55%),
+          linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
       }
-      .muted {
-        color: #5f6368;
-        font-size: 12px;
+
+      .shell {
+        padding: 14px 14px 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+
+      .brand-mark {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background: linear-gradient(145deg, var(--signal) 0%, #1a6b5c 100%);
+        box-shadow: 0 0 0 1px rgba(20, 24, 32, 0.08);
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .brand-mark::after {
+        content: "";
+        position: absolute;
+        left: 28%;
+        right: 28%;
+        top: 48%;
+        height: 2px;
+        background: #fff;
+        border-radius: 2px;
+        box-shadow: 3px -3px 0 0 #fff;
+      }
+
+      .brand-name {
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 12px 12px 10px;
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.7) inset,
+          0 8px 20px rgba(20, 24, 32, 0.05);
+      }
+
+      .card + .card {
+        margin-top: 10px;
+      }
+
+      .card-title {
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 400;
+        margin: 0 0 10px;
+        color: var(--ink);
+      }
+
+      .field {
+        display: block;
+        margin: 0 0 10px;
+      }
+
+      .field:last-child {
+        margin-bottom: 0;
+      }
+
+      .field-label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        letter-spacing: -0.01em;
+      }
+
+      .field-hint {
+        margin: 3px 0 0;
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        min-height: 34px;
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      input[type="text"]::placeholder {
+        color: #9aa3b2;
+        font-family: var(--font-body);
+      }
+
+      input[type="text"]:focus,
+      input[type="password"]:focus {
+        border-color: var(--signal);
+        box-shadow: 0 0 0 3px var(--signal-soft);
+      }
+
+      .toggle-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .toggle-row input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .switch {
+        position: relative;
+        width: 36px;
+        height: 20px;
+        border-radius: 999px;
+        background: var(--line);
+        flex-shrink: 0;
+        margin-top: 1px;
+        transition: background 0.15s ease;
+      }
+
+      .switch::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(20, 24, 32, 0.2);
+        transition: transform 0.15s ease;
+      }
+
+      .toggle-row input:checked + .switch {
+        background: var(--signal);
+      }
+
+      .toggle-row input:checked + .switch::after {
+        transform: translateX(16px);
+      }
+
+      .toggle-row input:focus-visible + .switch {
+        outline: 2px solid var(--signal);
+        outline-offset: 2px;
+      }
+
+      .toggle-copy strong {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      .toggle-copy span {
+        display: block;
+        margin-top: 2px;
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+
+      .signal-note {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        margin-top: 10px;
+        padding: 8px 9px;
+        border-radius: 8px;
+        background: var(--signal-soft);
+        color: var(--ink-soft);
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      .signal-note .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--signal);
+        margin-top: 3px;
+        flex-shrink: 0;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 34px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-family: var(--font-body);
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .btn-primary {
+        flex: 1;
+        background: var(--ink);
+        color: #f7f8fa;
+      }
+
+      .btn-primary:hover {
+        background: #000;
+      }
+
+      .btn-primary:focus-visible {
+        outline: 2px solid var(--signal);
+        outline-offset: 2px;
+      }
+
+      .status {
+        min-height: 16px;
+        margin: 8px 0 0;
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .status.is-ok {
+        color: var(--reply);
+      }
+
+      .status.is-error {
+        color: var(--danger);
+      }
+
+      .footer-link {
+        display: block;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 11px;
+        color: var(--signal);
+        text-decoration: none;
+      }
+
+      .footer-link:hover {
+        color: var(--ink);
+        text-decoration: underline;
+        text-underline-offset: 2px;
       }
     </style>
   </head>
   <body>
-    <strong>MailTrack Quiet</strong>
-    <p class="muted">Engagement-first · clicks & replies primary</p>
-    <label>
-      <input type="checkbox" id="tracking" /> Track by default (sticky)
-    </label>
-    <label>
-      API token
-      <input type="text" id="token" placeholder="from /api/auth/extension-token" />
-    </label>
-    <label>
-      API base
-      <input type="text" id="base" placeholder="http://localhost:3000" />
-    </label>
-    <button id="save" type="button">Save</button>
-    <p class="muted" id="status"></p>
+    <div class="shell">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">MailTrack</span>
+      </div>
+      <p class="eyebrow">Clicks &amp; replies · quiet Gmail</p>
+
+      <section class="card" aria-labelledby="track-title">
+        <h2 class="card-title" id="track-title">When you send</h2>
+        <label class="toggle-row" for="tracking">
+          <input type="checkbox" id="tracking" />
+          <span class="switch" aria-hidden="true"></span>
+          <span class="toggle-copy">
+            <strong>Track by default</strong>
+            <span>Sticky preference for new composes. Toggle per send in Gmail.</span>
+          </span>
+        </label>
+        <div class="signal-note">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Alerts favor clicks and replies. Possible opens stay secondary.</span>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="connect-title">
+        <h2 class="card-title" id="connect-title">Connect</h2>
+        <label class="field" for="token">
+          <span class="field-label">API token</span>
+          <input
+            type="password"
+            id="token"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Paste token from dashboard"
+          />
+          <p class="field-hint">From signed-in site → extension token exchange.</p>
+        </label>
+        <label class="field" for="base">
+          <span class="field-label">API base</span>
+          <input
+            type="text"
+            id="base"
+            spellcheck="false"
+            placeholder="http://localhost:3000"
+          />
+        </label>
+      </section>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="save" type="button">Save settings</button>
+      </div>
+      <p class="status" id="status" role="status"></p>
+      <a class="footer-link" id="open-dashboard" href="http://localhost:3000/dashboard" target="_blank" rel="noreferrer">
+        Open activity dashboard
+      </a>
+    </div>
     <script type="module" src="popup.js"></script>
   </body>
 </html>

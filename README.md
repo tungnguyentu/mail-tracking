@@ -1,4 +1,4 @@
-# MailTrack Quiet
+# MailTrack
 
 Engagement-first email tracking for freelancers on **Gmail web**: Chrome MV3 extension + Next.js API/dashboard/marketing.
 

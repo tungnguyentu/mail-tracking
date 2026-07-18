@@ -1,41 +1,66 @@
 import Link from "next/link";
+import { SiteNav } from "@/components/site-nav";
 
 export default function InstallPage() {
-  return (
-    <>
-      <nav className="nav">
-        <Link href="/" className="brand">
-          MailTrack Quiet
-        </Link>
-        <Link href="/dashboard">Dashboard</Link>
-      </nav>
-      <div className="card">
-        <h1>Install checklist</h1>
-        <ol>
-          <li>
-            <Link href="/login">Sign in</Link> with Google (or demo bypass in
-            dev).
-          </li>
-          <li>
-            Load the Chrome extension from{" "}
-            <code>apps/extension/dist</code> (developer mode → Load unpacked)
-            after running <code>pnpm --filter @mail-tracking/extension build</code>
-            .
-          </li>
-          <li>
-            Open Gmail in Chrome. Use the minimal Track toggle on compose —
-            sticky last choice.
-          </li>
-          <li>
-            Send a test email. Click a link from another client; check desktop
-            notification and this dashboard.
-          </li>
-        </ol>
-        <p className="muted">
-          Chrome Web Store listing is deferred until OAuth verification and
-          packaging are ready.
-        </p>
-      </div>
-    </>
-  );
+ return (
+ <>
+ <SiteNav
+ links={[
+ { href: "/dashboard", label: "Activity" },
+ { href: "/login", label: "Sign in" },
+ ]}
+ />
+
+ <header className="page-head">
+ <p className="eyebrow">Setup</p>
+ <h1>From zero to first signal</h1>
+ <p className="lede" style={{ marginBottom: 0 }}>
+ Four steps. Keep Gmail clean; let the extension do the quiet work.
+ </p>
+ </header>
+
+ <div className="card">
+ <ol className="steps">
+ <li>
+ <h3>Sign in</h3>
+ <p className="muted" style={{ margin: 0 }}>
+ <Link href="/login">Sign in with Google</Link>
+ {process.env.AUTH_BYPASS === "1"
+ ? " (or use demo sign-in in local dev)."
+ : "."}
+ </p>
+ </li>
+ <li>
+ <h3>Load the extension</h3>
+ <p className="muted" style={{ margin: 0 }}>
+ Build with{" "}
+ <code>pnpm --filter @mail-tracking/extension build</code>, then
+ Chrome → Developer mode → Load unpacked →{" "}
+ <code>apps/extension/dist</code>.
+ </p>
+ </li>
+ <li>
+ <h3>Connect the popup</h3>
+ <p className="muted" style={{ margin: 0 }}>
+ API base <code>http://localhost:3000</code>. Exchange a session for
+ a token via <code>POST /api/auth/extension-token</code> and paste it
+ into the extension popup.
+ </p>
+ </li>
+ <li>
+ <h3>Send with Track on</h3>
+ <p className="muted" style={{ margin: 0 }}>
+ Compose in Gmail, leave the minimal Track control on, send a test
+ with a link. Click it elsewhere, watch the notification and{" "}
+ <Link href="/dashboard">Activity</Link>.
+ </p>
+ </li>
+ </ol>
+ </div>
+
+ <p className="muted" style={{ marginTop: "1.25rem" }}>
+ Chrome Web Store packaging comes later. Sideload is the path for now.
+ </p>
+ </>
+ );
 }

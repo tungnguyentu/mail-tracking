@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SiteNav } from "@/components/site-nav";
 import { BypassLoginButton } from "./bypass-button";
 
 export default function LoginPage() {
@@ -9,33 +10,41 @@ export default function LoginPage() {
 
   return (
     <>
-      <nav className="nav">
-        <Link href="/" className="brand">
-          MailTrack Quiet
-        </Link>
-      </nav>
-      <div className="card" style={{ maxWidth: 420 }}>
-        <h1>Sign in</h1>
-        <p className="muted">
-          Use Google to connect your Gmail account for tracking and reply
-          detection.
+      <SiteNav links={[{ href: "/", label: "Home" }, { href: "/privacy", label: "Privacy" }]} />
+
+      <div className="auth-panel card">
+        <p className="eyebrow">Account</p>
+        <h1>Sign in to your desk</h1>
+        <p className="muted" style={{ marginBottom: "1.25rem" }}>
+          Connect Google so we can attribute engagement on your outbound Gmail
+          and detect replies in tracked threads.
         </p>
+
         {hasGoogle ? (
-          <a className="btn" href="/api/auth/google">
+          <a className="btn" href="/api/auth/google" style={{ width: "100%" }}>
             Continue with Google
           </a>
         ) : (
           <p className="muted">
-            Google OAuth is not configured yet. Set{" "}
-            <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code>.
+            Google OAuth is not configured. Set{" "}
+            <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code>{" "}
+            to enable it.
           </p>
         )}
+
         {bypass && (
-          <div style={{ marginTop: "1rem" }}>
-            <p className="muted">Dev bypass enabled (AUTH_BYPASS=1)</p>
+          <>
+            <div className="auth-divider">local demo</div>
+            <p className="muted" style={{ marginBottom: "0.75rem" }}>
+              Development bypass is on. Use this only on your machine.
+            </p>
             <BypassLoginButton />
-          </div>
+          </>
         )}
+
+        <p className="muted" style={{ marginTop: "1.35rem", marginBottom: 0 }}>
+          <Link href="/install">Install checklist</Link> after you sign in.
+        </p>
       </div>
     </>
   );
