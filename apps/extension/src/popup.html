@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font: 13px system-ui, sans-serif;
+        margin: 12px;
+        width: 280px;
+        color: #202124;
+      }
+      label {
+        display: block;
+        margin: 8px 0;
+      }
+      input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      button {
+        margin-top: 8px;
+      }
+      .muted {
+        color: #5f6368;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <strong>MailTrack Quiet</strong>
+    <p class="muted">Engagement-first · clicks & replies primary</p>
+    <label>
+      <input type="checkbox" id="tracking" /> Track by default (sticky)
+    </label>
+    <label>
+      API token
+      <input type="text" id="token" placeholder="from /api/auth/extension-token" />
+    </label>
+    <label>
+      API base
+      <input type="text" id="base" placeholder="http://localhost:3000" />
+    </label>
+    <button id="save" type="button">Save</button>
+    <p class="muted" id="status"></p>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

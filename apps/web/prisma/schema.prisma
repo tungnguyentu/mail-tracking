@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// SQLite for local/dev/test shippability; production can switch to postgresql
+// by changing provider + DATABASE_URL (see README).
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String   @id @default(cuid())
+  googleSub             String   @unique
+  email                 String   @unique
+  name                  String?
+  refreshTokenEnc       String?
+  gmailHistoryId        String?
+  gmailWatchExpiration  String?
+  notificationsEnabled  Boolean  @default(true)
+  notifyOnOpen          Boolean  @default(false)
+  notifyOnClick         Boolean  @default(true)
+  notifyOnReply         Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  sessions              Session[]
+  extensionTokens       ExtensionToken[]
+  trackedSends          TrackedSend[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model ExtensionToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model TrackedSend {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject          String   @default("")
+  toJson           String
+  openToken        String   @unique
+  gmailThreadId    String?
+  gmailMessageId   String?
+  rfc822MessageId  String?
+  createdAt        DateTime @default(now())
+  links            TrackedLink[]
+  events           Event[]
+
+  @@index([userId])
+  @@index([gmailThreadId])
+}
+
+model TrackedLink {
+  id          String      @id @default(cuid())
+  sendId      String
+  send        TrackedSend @relation(fields: [sendId], references: [id], onDelete: Cascade)
+  originalUrl String
+  token       String      @unique
+  events      Event[]
+}
+
+model Event {
+  id               String       @id @default(cuid())
+  sendId           String
+  send             TrackedSend  @relation(fields: [sendId], references: [id], onDelete: Cascade)
+  type             String
+  occurredAt       DateTime     @default(now())
+  linkId           String?
+  link             TrackedLink? @relation(fields: [linkId], references: [id], onDelete: SetNull)
+  gmailMessageId   String?
+  userAgent        String?
+  dedupeKey        String?      @unique
+
+  @@index([sendId])
+  @@index([occurredAt])
+}
