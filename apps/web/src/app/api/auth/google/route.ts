@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 
 /** Start Google OAuth (authorization code). */
@@ -17,6 +18,7 @@ export async function GET() {
     "profile",
     "https://www.googleapis.com/auth/gmail.readonly",
   ].join(" ");
+  const state = randomBytes(24).toString("base64url");
   const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   url.searchParams.set("client_id", clientId);
   url.searchParams.set("redirect_uri", redirectUri);
@@ -24,6 +26,14 @@ export async function GET() {
   url.searchParams.set("scope", scope);
   url.searchParams.set("access_type", "offline");
   url.searchParams.set("prompt", "consent");
-  url.searchParams.set("state", "mt1");
-  return NextResponse.redirect(url.toString());
+  url.searchParams.set("state", state);
+  const res = NextResponse.redirect(url.toString());
+  res.cookies.set("mt_oauth_state", state, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 600,
+    secure: process.env.NODE_ENV === "production",
+  });
+  return res;
 }

@@ -5,9 +5,9 @@ import {
   sessionCookieName,
 } from "@/lib/auth";
 
-/** Dev/demo sign-in without Google OAuth when AUTH_BYPASS=1. */
+/** Dev/demo sign-in without Google OAuth when AUTH_BYPASS=1. Never in production. */
 export async function POST() {
-  if (process.env.AUTH_BYPASS !== "1") {
+  if (process.env.NODE_ENV === "production" || process.env.AUTH_BYPASS !== "1") {
     return NextResponse.json({ error: "bypass disabled" }, { status: 403 });
   }
   const user = await ensureBypassUser();

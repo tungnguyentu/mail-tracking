@@ -14,7 +14,9 @@ export async function GET(req: Request) {
     "",
   );
 
-  if (!code || state !== "mt1") {
+  const cookieHeader = req.headers.get("cookie") ?? "";
+  const expectedState = cookieHeader.match(/mt_oauth_state=([^;]+)/)?.[1];
+  if (!code || !state || !expectedState || state !== expectedState) {
     return NextResponse.redirect(`${appUrl}/login?error=invalid_state`);
   }
 

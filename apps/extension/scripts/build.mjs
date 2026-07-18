@@ -19,7 +19,6 @@ const manifest = {
   host_permissions: [
     "https://mail.google.com/*",
     "http://localhost:3000/*",
-    "https://*/*",
   ],
   background: {
     service_worker: "background.js",
