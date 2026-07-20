@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ConfirmSendRequestSchema } from "@mail-tracking/shared";
+import { ConfirmSendRequestSchema } from "@trackpixl/shared";
 import { getUserFromRequest } from "@/lib/auth";
 import { confirmSend } from "@/lib/tracking";
 

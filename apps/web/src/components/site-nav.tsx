@@ -5,7 +5,7 @@ export function Brand() {
   return (
     <Link href="/" className="brand">
       <span className="brand-mark" aria-hidden />
-      MailTrack
+      TrackPixl
     </Link>
   );
 }

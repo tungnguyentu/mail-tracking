@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isOpaqueToken } from "@mail-tracking/shared";
+import { isOpaqueToken } from "@trackpixl/shared";
 import { PIXEL_GIF, recordOpen } from "@/lib/tracking";
 
 export async function GET(

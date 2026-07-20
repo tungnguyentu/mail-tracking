@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { prisma } from "./db";
 import { encryptSecret } from "./crypto";
 
-const SESSION_COOKIE = "mt_session";
+const SESSION_COOKIE = "tp_session";
 const SESSION_DAYS = 30;
 const EXT_TOKEN_DAYS = 30;
 
@@ -62,7 +62,7 @@ export async function getSessionUserFromCookies() {
 
 /** Dev/demo login without Google when AUTH_BYPASS=1. */
 export async function ensureBypassUser() {
-  const email = "demo@mail-tracking.local";
+  const email = "demo@trackpixl.local";
   const user = await prisma.user.upsert({
     where: { email },
     create: {

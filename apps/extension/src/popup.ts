@@ -1,64 +1,80 @@
-import { DEFAULT_API_BASE } from "./config";
+import { API_BASE } from "./config";
 
 const tracking = document.getElementById("tracking") as HTMLInputElement;
-const token = document.getElementById("token") as HTMLInputElement;
-const base = document.getElementById("base") as HTMLInputElement;
-const status = document.getElementById("status") as HTMLElement;
-const save = document.getElementById("save") as HTMLButtonElement;
-const dashLink = document.getElementById("open-dashboard") as HTMLAnchorElement;
+const authPill = document.getElementById("auth-pill") as HTMLElement;
+const userEmail = document.getElementById("user-email") as HTMLElement;
+const signIn = document.getElementById("sign-in") as HTMLButtonElement;
+const signOut = document.getElementById("sign-out") as HTMLButtonElement;
+const refresh = document.getElementById("refresh") as HTMLButtonElement;
+const authHint = document.getElementById("auth-hint") as HTMLElement;
+const apiBaseEl = document.getElementById("api-base") as HTMLElement;
 
-function setStatus(message: string, kind: "ok" | "error" | "" = "") {
- status.textContent = message;
- status.classList.remove("is-ok", "is-error");
- if (kind === "ok") status.classList.add("is-ok");
- if (kind === "error") status.classList.add("is-error");
+apiBaseEl.textContent = `Tracking host: ${API_BASE}`;
+
+function bg<T>(message: unknown): Promise<T> {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(message, (response) => resolve(response as T));
+  });
 }
 
-function syncDashboardHref(apiBase: string) {
- const root = (apiBase || DEFAULT_API_BASE).replace(/\/$/, "");
- dashLink.href = `${root}/dashboard`;
+async function refreshAuth() {
+  authPill.textContent = "Checking…";
+  authPill.className = "pill off";
+  const auth = await bg<{ signedIn?: boolean; email?: string; error?: string }>({
+    type: "SYNC_AUTH",
+  });
+  const state = await bg<{ signedIn?: boolean; email?: string }>({
+    type: "GET_AUTH",
+  });
+  const signedIn = Boolean(state?.signedIn || auth?.signedIn);
+  const email = state?.email || auth?.email;
+
+  if (signedIn && email) {
+    authPill.textContent = "Connected";
+    authPill.className = "pill on";
+    userEmail.textContent = email;
+    signIn.hidden = true;
+    signOut.hidden = false;
+    authHint.textContent =
+      "Ready. In Gmail, leave Track on and send. We inject open and click tracking on our domain.";
+  } else {
+    authPill.textContent = "Not signed in";
+    authPill.className = "pill off";
+    userEmail.textContent = "";
+    signIn.hidden = false;
+    signOut.hidden = true;
+    authHint.textContent =
+      "Sign in on our site once in this browser. We pick up the session automatically.";
+  }
 }
 
-chrome.storage.sync.get(
- {
- trackingEnabled: true,
- apiToken: "",
- apiBase: DEFAULT_API_BASE,
- },
- (data) => {
- tracking.checked = data.trackingEnabled !== false;
- token.value = data.apiToken || "";
- base.value = data.apiBase || DEFAULT_API_BASE;
- syncDashboardHref(base.value);
- },
-);
-
-base.addEventListener("change", () => {
- syncDashboardHref(base.value.trim() || DEFAULT_API_BASE);
+chrome.runtime.sendMessage({ type: "GET_PREFS" }, (prefs) => {
+  tracking.checked = prefs?.trackingEnabled !== false;
 });
 
-save.addEventListener("click", () => {
- const apiBase = base.value.trim() || DEFAULT_API_BASE;
- const apiToken = token.value.trim();
+tracking.addEventListener("change", () => {
+  chrome.runtime.sendMessage({
+    type: "SET_TRACKING",
+    enabled: tracking.checked,
+  });
+});
 
- if (!apiBase.startsWith("http://") && !apiBase.startsWith("https://")) {
- setStatus("API base must start with http:// or https://", "error");
- return;
- }
+signIn.addEventListener("click", () => {
+  chrome.runtime.sendMessage({ type: "SIGN_IN" });
+});
 
- chrome.storage.sync.set(
- {
- trackingEnabled: tracking.checked,
- apiToken,
- apiBase,
- },
- () => {
- syncDashboardHref(apiBase);
- if (!apiToken) {
- setStatus("Saved. Add an API token to track sends.", "error");
- return;
- }
- setStatus("Saved.", "ok");
- },
- );
+signOut.addEventListener("click", async () => {
+  await bg({ type: "SIGN_OUT" });
+  await refreshAuth();
+});
+
+refresh.addEventListener("click", () => {
+  void refreshAuth();
+});
+
+void refreshAuth();
+
+// When user returns from login tab, refresh state
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") void refreshAuth();
 });

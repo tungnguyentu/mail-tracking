@@ -1,47 +1,96 @@
-import { DEFAULT_NOTIFICATION_PREFS } from "@mail-tracking/shared";
-import { fetchEventsSince, fetchMe } from "./lib/api";
+import { DEFAULT_NOTIFICATION_PREFS } from "@trackpixl/shared";
+import { SESSION_COOKIE } from "./config";
+import {
+  ensureAuth,
+  openSignInTab,
+  signOutExtension,
+  syncAuthFromDomain,
+} from "./lib/auth";
+import {
+  confirmSend,
+  createSend,
+  fetchEventsSince,
+  fetchMe,
+} from "./lib/api";
 import { buildNotification } from "./lib/notify";
 import { getPrefs, setPrefs } from "./lib/storage";
 
-const ALARM = "mt-poll-events";
+const ALARM = "tp-poll-events";
+const AUTH_ALARM = "tp-sync-auth";
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.alarms.create(ALARM, { periodInMinutes: 0.5 });
+  chrome.alarms.create(AUTH_ALARM, { periodInMinutes: 5 });
+  void syncAuthFromDomain();
+});
+
+chrome.runtime.onStartup?.addListener(() => {
+  void syncAuthFromDomain();
+});
+
+// When user finishes login on our domain, cookie appears — resync soon
+chrome.cookies?.onChanged?.addListener((change) => {
+  if (change.cookie.name === SESSION_COOKIE && !change.removed) {
+    void syncAuthFromDomain();
+  }
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name !== ALARM) return;
-  await pollEvents();
+  if (alarm.name === AUTH_ALARM) {
+    await syncAuthFromDomain();
+    return;
+  }
+  if (alarm.name === ALARM) {
+    await pollEvents();
+  }
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message?.type === "GET_PREFS") {
-    getPrefs().then(sendResponse);
-    return true;
-  }
-  if (message?.type === "SET_TRACKING") {
-    setPrefs({ trackingEnabled: Boolean(message.enabled) }).then(() =>
-      sendResponse({ ok: true }),
-    );
-    return true;
-  }
-  if (message?.type === "SET_API_TOKEN") {
-    setPrefs({ apiToken: String(message.token || "") }).then(() =>
-      sendResponse({ ok: true }),
-    );
-    return true;
-  }
-  if (message?.type === "POLL_NOW") {
-    pollEvents().then(() => sendResponse({ ok: true }));
-    return true;
-  }
-  return false;
+  const handle = async () => {
+    switch (message?.type) {
+      case "GET_PREFS":
+        return getPrefs();
+      case "GET_AUTH":
+        return ensureAuth();
+      case "SYNC_AUTH":
+        return syncAuthFromDomain();
+      case "SIGN_IN":
+        openSignInTab();
+        return { ok: true };
+      case "SIGN_OUT":
+        await signOutExtension();
+        return { ok: true };
+      case "SET_TRACKING":
+        await setPrefs({ trackingEnabled: Boolean(message.enabled) });
+        return { ok: true };
+      case "CREATE_SEND":
+        return createSend(message.body);
+      case "CONFIRM_SEND":
+        await confirmSend(message.sendId, message.data ?? {});
+        return { ok: true };
+      case "POLL_NOW":
+        await pollEvents();
+        return { ok: true };
+      default:
+        return { error: "unknown" };
+    }
+  };
+
+  handle()
+    .then(sendResponse)
+    .catch((err: Error) => {
+      sendResponse({
+        error: err?.message || "failed",
+      });
+    });
+  return true;
 });
 
 async function pollEvents() {
-  const prefs = await getPrefs();
-  if (!prefs.apiToken) return;
+  const auth = await ensureAuth();
+  if (!auth.signedIn) return;
 
+  const prefs = await getPrefs();
   let meSettings = DEFAULT_NOTIFICATION_PREFS;
   try {
     const me = await fetchMe();
@@ -73,10 +122,9 @@ async function pollEvents() {
       }
       seen.add(ev.id);
     }
-    const notifiedEventIds = [...seen].slice(-200);
     await setPrefs({
       eventCursor: cursor ?? prefs.eventCursor,
-      notifiedEventIds,
+      notifiedEventIds: [...seen].slice(-200),
     });
   } catch (e) {
     console.warn("pollEvents", e);

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { CreateSendRequestSchema } from "@mail-tracking/shared";
+import { CreateSendRequestSchema } from "@trackpixl/shared";
 import { getUserFromRequest } from "@/lib/auth";
 import { createTrackedSend } from "@/lib/tracking";
 

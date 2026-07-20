@@ -1,5 +1,5 @@
 {
-  "name": "@mail-tracking/web",
+  "name": "@trackpixl/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
     "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
-    "@mail-tracking/shared": "workspace:*",
+    "@trackpixl/shared": "workspace:*",
     "@prisma/client": "^6.5.0",
     "next": "^15.2.3",
     "react": "^19.0.0",

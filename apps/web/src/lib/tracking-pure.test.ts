@@ -4,7 +4,7 @@ import {
   rankEngagementSignals,
   shouldNotifyForEvent,
   DEFAULT_NOTIFICATION_PREFS,
-} from "@mail-tracking/shared";
+} from "@trackpixl/shared";
 
 describe("tracking contracts", () => {
   it("create-send requires recipients", () => {

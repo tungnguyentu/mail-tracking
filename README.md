@@ -1,6 +1,8 @@
-# MailTrack
+# TrackPixl
 
 Engagement-first email tracking for freelancers on **Gmail web**: Chrome MV3 extension + Next.js API/dashboard/marketing.
+
+**Product domain:** [trackpixl.click](https://trackpixl.click)
 
 Clicks and replies are primary signals. Opens are secondary (noisy). Gmail UI stays minimal; desktop notifications carry the alert.
 
@@ -22,7 +24,7 @@ docs/            Brainstorm + plan
 
 ```bash
 pnpm install
-pnpm --filter @mail-tracking/shared build
+pnpm --filter @trackpixl/shared build
 cd apps/web && pnpm exec prisma db push && cd ../..
 ```
 
@@ -38,16 +40,20 @@ Copy env (already seeded for local demo):
 pnpm dev:web
 
 # Extension → apps/extension/dist (Load unpacked in chrome://extensions)
-pnpm --filter @mail-tracking/extension build
+pnpm --filter @trackpixl/extension build
 ```
 
-### Demo path
+### Demo path (no token paste)
 
-1. Open http://localhost:3000 → **Continue with Google** → **Demo sign-in**
-2. Dashboard → install checklist
-3. `POST /api/auth/extension-token` while logged in (or use browser session cookie exchange from DevTools)
-4. Paste API token into extension popup
-5. Gmail compose → Track toggle → send; open/click via `/t/o/:token` and `/t/c/:token`
+1. Run web: `pnpm dev:web` (APP_URL / tracking host, default `http://localhost:3000`)
+2. Build extension: `TRACKPIXL_API_BASE=http://localhost:3000 pnpm --filter @trackpixl/extension build`
+3. Load unpacked `apps/extension/dist` in Chrome
+4. Extension popup → **Sign in with TrackPixl** → Demo sign-in (or Google)
+5. Popup should show **Connected** (session cookie → silent extension token)
+6. Gmail → Track on → send with a link. Open pixel + click URLs use our domain (`APP_URL`)
+7. Click link / open mail → Activity dashboard + optional notifications
+
+Production: set `APP_URL=https://trackpixl.click` on the web app and build the extension with the same `TRACKPIXL_API_BASE`.
 
 ## Test
 

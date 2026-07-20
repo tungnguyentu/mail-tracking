@@ -2,7 +2,7 @@ import {
   injectOpenPixel,
   rewriteLinksInHtml,
   type CreateSendResponse,
-} from "@mail-tracking/shared";
+} from "@trackpixl/shared";
 
 /** Pure: apply tracking to compose HTML using create-send response. */
 export function prepareTrackedBody(

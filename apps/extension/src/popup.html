@@ -12,22 +12,16 @@
         --ink-soft: #3d4654;
         --muted: #6b7382;
         --line: #cfd6e2;
-        --line-soft: #e4e8f0;
         --signal: #2f4fbf;
         --signal-soft: #dfe6fb;
         --reply: #1a6b5c;
         --danger: #a33b3b;
         --radius: 12px;
-        --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
-          serif;
         --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
-        --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+        --font-display: "Iowan Old Style", Palatino, Georgia, serif;
+        --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
       }
-
-      * {
-        box-sizing: border-box;
-      }
-
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         width: 320px;
@@ -39,341 +33,145 @@
           radial-gradient(280px 120px at 100% 0%, #d9e2f7 0%, transparent 55%),
           linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
       }
-
-      .shell {
-        padding: 14px 14px 16px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 4px;
-      }
-
+      .shell { padding: 14px 14px 16px; }
+      .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
       .brand-mark {
-        width: 22px;
-        height: 22px;
-        border-radius: 6px;
+        width: 22px; height: 22px; border-radius: 6px;
         background: linear-gradient(145deg, var(--signal) 0%, #1a6b5c 100%);
-        box-shadow: 0 0 0 1px rgba(20, 24, 32, 0.08);
-        position: relative;
-        flex-shrink: 0;
+        position: relative; flex-shrink: 0;
       }
-
       .brand-mark::after {
         content: "";
-        position: absolute;
-        left: 28%;
-        right: 28%;
-        top: 48%;
-        height: 2px;
-        background: #fff;
-        border-radius: 2px;
-        box-shadow: 3px -3px 0 0 #fff;
+        position: absolute; left: 28%; right: 28%; top: 48%; height: 2px;
+        background: #fff; border-radius: 2px; box-shadow: 3px -3px 0 0 #fff;
       }
-
-      .brand-name {
-        font-weight: 600;
-        font-size: 13px;
-        letter-spacing: -0.02em;
-        color: var(--ink);
-      }
-
+      .brand-name { font-weight: 600; font-size: 13px; letter-spacing: -0.02em; }
       .eyebrow {
         margin: 0 0 12px;
         font-family: var(--font-mono);
-        font-size: 10px;
-        font-weight: 500;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
+        font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
         color: var(--muted);
       }
-
       .card {
         background: var(--surface);
         border: 1px solid var(--line);
         border-radius: var(--radius);
-        padding: 12px 12px 10px;
-        box-shadow:
-          0 1px 0 rgba(255, 255, 255, 0.7) inset,
-          0 8px 20px rgba(20, 24, 32, 0.05);
+        padding: 12px;
+        box-shadow: 0 8px 20px rgba(20, 24, 32, 0.05);
       }
-
-      .card + .card {
-        margin-top: 10px;
-      }
-
+      .card + .card { margin-top: 10px; }
       .card-title {
         font-family: var(--font-display);
-        font-size: 14px;
-        font-weight: 400;
-        margin: 0 0 10px;
-        color: var(--ink);
+        font-size: 14px; font-weight: 400; margin: 0 0 10px;
       }
-
-      .field {
-        display: block;
-        margin: 0 0 10px;
-      }
-
-      .field:last-child {
-        margin-bottom: 0;
-      }
-
-      .field-label {
-        display: block;
-        margin-bottom: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--ink-soft);
-        letter-spacing: -0.01em;
-      }
-
-      .field-hint {
-        margin: 3px 0 0;
-        font-size: 11px;
-        color: var(--muted);
-      }
-
-      input[type="text"],
-      input[type="password"] {
-        width: 100%;
-        min-height: 34px;
-        padding: 6px 10px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: #fff;
-        color: var(--ink);
-        font-family: var(--font-mono);
-        font-size: 11px;
-        outline: none;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-      }
-
-      input[type="text"]::placeholder {
-        color: #9aa3b2;
-        font-family: var(--font-body);
-      }
-
-      input[type="text"]:focus,
-      input[type="password"]:focus {
-        border-color: var(--signal);
-        box-shadow: 0 0 0 3px var(--signal-soft);
-      }
-
       .toggle-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        cursor: pointer;
-        user-select: none;
+        display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
       }
-
-      .toggle-row input {
-        position: absolute;
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-
+      .toggle-row input { position: absolute; opacity: 0; width: 0; height: 0; }
       .switch {
-        position: relative;
-        width: 36px;
-        height: 20px;
-        border-radius: 999px;
-        background: var(--line);
-        flex-shrink: 0;
-        margin-top: 1px;
-        transition: background 0.15s ease;
+        position: relative; width: 36px; height: 20px; border-radius: 999px;
+        background: var(--line); flex-shrink: 0; margin-top: 1px;
       }
-
       .switch::after {
-        content: "";
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 1px 2px rgba(20, 24, 32, 0.2);
+        content: ""; position: absolute; top: 2px; left: 2px;
+        width: 16px; height: 16px; border-radius: 50%; background: #fff;
+        box-shadow: 0 1px 2px rgba(20,24,32,0.2);
         transition: transform 0.15s ease;
       }
-
-      .toggle-row input:checked + .switch {
-        background: var(--signal);
-      }
-
-      .toggle-row input:checked + .switch::after {
-        transform: translateX(16px);
-      }
-
-      .toggle-row input:focus-visible + .switch {
-        outline: 2px solid var(--signal);
-        outline-offset: 2px;
-      }
-
-      .toggle-copy strong {
-        display: block;
-        font-size: 12.5px;
-        font-weight: 600;
-        color: var(--ink);
-      }
-
-      .toggle-copy span {
-        display: block;
-        margin-top: 2px;
-        font-size: 11px;
-        color: var(--muted);
-        line-height: 1.35;
-      }
-
+      .toggle-row input:checked + .switch { background: var(--signal); }
+      .toggle-row input:checked + .switch::after { transform: translateX(16px); }
+      .toggle-copy strong { display: block; font-size: 12.5px; }
+      .toggle-copy span { display: block; margin-top: 2px; font-size: 11px; color: var(--muted); }
       .signal-note {
-        display: flex;
-        gap: 8px;
-        align-items: flex-start;
-        margin-top: 10px;
-        padding: 8px 9px;
-        border-radius: 8px;
-        background: var(--signal-soft);
-        color: var(--ink-soft);
-        font-size: 11px;
-        line-height: 1.35;
+        display: flex; gap: 8px; margin-top: 10px; padding: 8px 9px;
+        border-radius: 8px; background: var(--signal-soft);
+        font-size: 11px; color: var(--ink-soft);
       }
-
       .signal-note .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--signal);
-        margin-top: 3px;
-        flex-shrink: 0;
+        width: 8px; height: 8px; border-radius: 50%;
+        background: var(--signal); margin-top: 3px; flex-shrink: 0;
       }
-
-      .actions {
-        display: flex;
-        gap: 8px;
-        margin-top: 12px;
+      .status-row {
+        display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
       }
-
+      .pill {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
+      }
+      .pill.on { background: #d8efe9; color: var(--reply); }
+      .pill.off { background: #f0f2f5; color: var(--muted); }
+      .email {
+        font-family: var(--font-mono); font-size: 11px; color: var(--ink-soft);
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+      .actions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
       .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 34px;
-        padding: 6px 14px;
-        border-radius: 999px;
-        border: 1px solid transparent;
-        font-family: var(--font-body);
-        font-size: 12.5px;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        cursor: pointer;
-        text-decoration: none;
+        display: inline-flex; align-items: center; justify-content: center;
+        min-height: 34px; padding: 6px 14px; border-radius: 999px;
+        border: 1px solid transparent; font-weight: 600; font-size: 12.5px;
+        cursor: pointer; font-family: var(--font-body);
       }
-
-      .btn-primary {
-        flex: 1;
-        background: var(--ink);
-        color: #f7f8fa;
+      .btn-primary { background: var(--ink); color: #f7f8fa; width: 100%; }
+      .btn-primary:hover { background: #000; }
+      .btn-secondary {
+        background: transparent; color: var(--ink); border-color: var(--line); width: 100%;
       }
-
-      .btn-primary:hover {
-        background: #000;
+      .btn-secondary:hover { background: #fff; }
+      .hint { margin: 10px 0 0; font-size: 11px; color: var(--muted); line-height: 1.4; }
+      .domain {
+        font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 10px;
+        word-break: break-all;
       }
-
-      .btn-primary:focus-visible {
-        outline: 2px solid var(--signal);
-        outline-offset: 2px;
-      }
-
-      .status {
-        min-height: 16px;
-        margin: 8px 0 0;
-        font-size: 11px;
-        color: var(--muted);
-      }
-
-      .status.is-ok {
-        color: var(--reply);
-      }
-
-      .status.is-error {
-        color: var(--danger);
-      }
-
-      .footer-link {
-        display: block;
-        margin-top: 10px;
-        text-align: center;
-        font-size: 11px;
-        color: var(--signal);
-        text-decoration: none;
-      }
-
-      .footer-link:hover {
-        color: var(--ink);
-        text-decoration: underline;
-        text-underline-offset: 2px;
-      }
+      [hidden] { display: none !important; }
     </style>
   </head>
   <body>
     <div class="shell">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-name">MailTrack</span>
+        <span class="brand-name">TrackPixl</span>
       </div>
-      <p class="eyebrow">Clicks &amp; replies · quiet Gmail</p>
+      <p class="eyebrow">Track on send · our domain</p>
 
-      <section class="card" aria-labelledby="track-title">
-        <h2 class="card-title" id="track-title">When you send</h2>
+      <section class="card">
+        <h2 class="card-title">Account</h2>
+        <div class="status-row">
+          <span class="pill off" id="auth-pill">Checking…</span>
+        </div>
+        <div class="email" id="user-email"></div>
+        <div class="actions">
+          <button class="btn btn-primary" id="sign-in" type="button" hidden>
+            Sign in with TrackPixl
+          </button>
+          <button class="btn btn-secondary" id="sign-out" type="button" hidden>
+            Sign out of extension
+          </button>
+          <button class="btn btn-secondary" id="refresh" type="button">
+            Refresh connection
+          </button>
+        </div>
+        <p class="hint" id="auth-hint">
+          Sign in on our site once. Tracking uses that session; no API token to paste.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">When you send</h2>
         <label class="toggle-row" for="tracking">
           <input type="checkbox" id="tracking" />
           <span class="switch" aria-hidden="true"></span>
           <span class="toggle-copy">
             <strong>Track by default</strong>
-            <span>Sticky preference for new composes. Toggle per send in Gmail.</span>
+            <span>Injects open pixel and click links from our domain on send.</span>
           </span>
         </label>
         <div class="signal-note">
           <span class="dot" aria-hidden="true"></span>
-          <span>Alerts favor clicks and replies. Possible opens stay secondary.</span>
+          <span>Turn Track on in Gmail compose, then send. Opens and clicks hit our domain.</span>
         </div>
       </section>
 
-      <section class="card" aria-labelledby="connect-title">
-        <h2 class="card-title" id="connect-title">Connect</h2>
-        <label class="field" for="token">
-          <span class="field-label">API token</span>
-          <input
-            type="password"
-            id="token"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="Paste token from dashboard"
-          />
-          <p class="field-hint">From signed-in site → extension token exchange.</p>
-        </label>
-        <label class="field" for="base">
-          <span class="field-label">API base</span>
-          <input
-            type="text"
-            id="base"
-            spellcheck="false"
-            placeholder="http://localhost:3000"
-          />
-        </label>
-      </section>
-
-      <div class="actions">
-        <button class="btn btn-primary" id="save" type="button">Save settings</button>
-      </div>
-      <p class="status" id="status" role="status"></p>
-      <a class="footer-link" id="open-dashboard" href="http://localhost:3000/dashboard" target="_blank" rel="noreferrer">
-        Open activity dashboard
-      </a>
+      <p class="domain" id="api-base"></p>
     </div>
     <script type="module" src="popup.js"></script>
   </body>

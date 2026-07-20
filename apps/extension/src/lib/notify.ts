@@ -2,7 +2,7 @@ import {
   shouldNotifyForEvent,
   type EventType,
   type NotificationPrefs,
-} from "@mail-tracking/shared";
+} from "@trackpixl/shared";
 
 export function buildNotification(
   type: EventType,

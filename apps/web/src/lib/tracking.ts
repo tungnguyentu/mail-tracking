@@ -3,7 +3,7 @@ import {
   buildOpenPixelPath,
   generateOpaqueToken,
   rankEngagementSignals,
-} from "@mail-tracking/shared";
+} from "@trackpixl/shared";
 import { prisma } from "./db";
 
 function appUrl() {

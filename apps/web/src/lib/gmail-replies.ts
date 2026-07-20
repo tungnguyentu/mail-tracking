@@ -1,4 +1,4 @@
-import { matchReplyToTrackedSends, type InboundMessage } from "@mail-tracking/shared";
+import { matchReplyToTrackedSends, type InboundMessage } from "@trackpixl/shared";
 import { prisma } from "./db";
 import { recordReplyIdempotent } from "./tracking";
 

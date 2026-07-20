@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
- title: "MailTrack: engagement-first email tracking",
+ title: "TrackPixl: engagement-first email tracking",
  description:
  "For freelancers on Gmail: know when clients click and reply, without noisy open-rate chrome.",
  icons: {

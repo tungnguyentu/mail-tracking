@@ -1,6 +1,6 @@
 "use client";
 
-export function BypassLoginButton() {
+export function BypassLoginButton({ next = "/dashboard" }: { next?: string }) {
   return (
     <button
       className="btn secondary"
@@ -9,7 +9,7 @@ export function BypassLoginButton() {
       onClick={async () => {
         const res = await fetch("/api/auth/bypass", { method: "POST" });
         if (res.ok) {
-          window.location.href = "/dashboard";
+          window.location.href = next.startsWith("/") ? next : "/dashboard";
         } else {
           alert("Demo sign-in failed. Is AUTH_BYPASS enabled?");
         }

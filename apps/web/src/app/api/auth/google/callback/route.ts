@@ -15,7 +15,7 @@ export async function GET(req: Request) {
   );
 
   const cookieHeader = req.headers.get("cookie") ?? "";
-  const expectedState = cookieHeader.match(/mt_oauth_state=([^;]+)/)?.[1];
+  const expectedState = cookieHeader.match(/tp_oauth_state=([^;]+)/)?.[1];
   if (!code || !state || !expectedState || state !== expectedState) {
     return NextResponse.redirect(`${appUrl}/login?error=invalid_state`);
   }
@@ -66,12 +66,16 @@ export async function GET(req: Request) {
     refreshToken: tokens.refresh_token ?? null,
   });
   const session = await createSession(user.id);
-  const res = NextResponse.redirect(`${appUrl}/dashboard`);
+  const nextRaw = cookieHeader.match(/tp_oauth_next=([^;]+)/)?.[1];
+  const nextPath = nextRaw ? decodeURIComponent(nextRaw) : "/dashboard";
+  const safeNext = nextPath.startsWith("/") ? nextPath : "/dashboard";
+  const res = NextResponse.redirect(`${appUrl}${safeNext}`);
   res.cookies.set(sessionCookieName(), session, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
     maxAge: 30 * 86400,
   });
+  res.cookies.set("tp_oauth_next", "", { path: "/", maxAge: 0 });
   return res;
 }

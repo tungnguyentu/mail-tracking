@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { matchReplyToTrackedSends } from "@mail-tracking/shared";
+import { matchReplyToTrackedSends } from "@trackpixl/shared";
 
 describe("reply pipeline (matcher integration)", () => {
   it("idempotent key shape for reply events", () => {

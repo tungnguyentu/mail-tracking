@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 
 /** Start Google OAuth (authorization code). */
-export async function GET() {
+export async function GET(req: Request) {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const appUrl = process.env.APP_URL ?? "http://localhost:3000";
   if (!clientId) {
@@ -11,6 +11,10 @@ export async function GET() {
       { status: 503 },
     );
   }
+  const nextParam = new URL(req.url).searchParams.get("next");
+  const next =
+    nextParam && nextParam.startsWith("/") ? nextParam : "/dashboard";
+
   const redirectUri = `${appUrl.replace(/\/$/, "")}/api/auth/google/callback`;
   const scope = [
     "openid",
@@ -28,7 +32,14 @@ export async function GET() {
   url.searchParams.set("prompt", "consent");
   url.searchParams.set("state", state);
   const res = NextResponse.redirect(url.toString());
-  res.cookies.set("mt_oauth_state", state, {
+  res.cookies.set("tp_oauth_state", state, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 600,
+    secure: process.env.NODE_ENV === "production",
+  });
+  res.cookies.set("tp_oauth_next", next, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",

@@ -1,16 +1,16 @@
 {
-  "name": "mail-tracking",
+  "name": "trackpixl",
   "private": true,
   "packageManager": "pnpm@10.10.0",
   "scripts": {
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "lint": "pnpm -r run lint --if-present",
-    "dev:web": "pnpm --filter @mail-tracking/web dev",
-    "dev:extension": "pnpm --filter @mail-tracking/extension dev",
-    "db:generate": "pnpm --filter @mail-tracking/web db:generate",
-    "db:push": "pnpm --filter @mail-tracking/web db:push",
-    "db:migrate": "pnpm --filter @mail-tracking/web db:migrate"
+    "dev:web": "pnpm --filter @trackpixl/web dev",
+    "dev:extension": "pnpm --filter @trackpixl/extension dev",
+    "db:generate": "pnpm --filter @trackpixl/web db:generate",
+    "db:push": "pnpm --filter @trackpixl/web db:push",
+    "db:migrate": "pnpm --filter @trackpixl/web db:migrate"
   },
   "engines": {
     "node": ">=20"

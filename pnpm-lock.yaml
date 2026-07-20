@@ -10,7 +10,7 @@ importers:
 
   apps/extension:
     dependencies:
-      '@mail-tracking/shared':
+      '@trackpixl/shared':
         specifier: workspace:*
         version: link:../../packages/shared
     devDependencies:
@@ -29,12 +29,12 @@ importers:
 
   apps/web:
     dependencies:
-      '@mail-tracking/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
       '@prisma/client':
         specifier: ^6.5.0
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
+      '@trackpixl/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       next:
         specifier: ^15.2.3
         version: 15.5.20(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

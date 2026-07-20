@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildNotification } from "./notify";
-import { DEFAULT_NOTIFICATION_PREFS } from "@mail-tracking/shared";
+import { DEFAULT_NOTIFICATION_PREFS } from "@trackpixl/shared";
 
 describe("buildNotification", () => {
   it("creates click notification by default", () => {

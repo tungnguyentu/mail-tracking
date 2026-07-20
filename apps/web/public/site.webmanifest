@@ -1,6 +1,6 @@
 {
-  "name": "MailTrack",
-  "short_name": "MailTrack",
+  "name": "TrackPixl",
+  "short_name": "TrackPixl",
   "description": "Engagement-first email tracking for freelancers on Gmail.",
   "start_url": "/",
   "display": "standalone",
