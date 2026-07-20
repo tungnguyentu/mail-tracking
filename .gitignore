@@ -14,4 +14,3 @@ apps/extension/dist
 *.tsbuildinfo
 .wxt
 .output
-.serena/
