@@ -45,8 +45,8 @@ export default async function DashboardPage() {
  <div className="card empty">
  <h2>No tracked sends yet</h2>
  <p>
- Install the extension, open Gmail, leave Track on, and send a
- proposal or follow-up. Engagement will land here, and as desktop
+ Install the extension, open Gmail, leave Track on, and send
+ important 1:1 mail. Engagement will land here, and as desktop
  notifications when it matters.
  </p>
  <Link className="btn" href="/install">

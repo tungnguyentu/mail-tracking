@@ -1,7 +1,7 @@
 {
   "name": "TrackPixl",
   "short_name": "TrackPixl",
-  "description": "Engagement-first email tracking for freelancers on Gmail.",
+  "description": "Engagement-first email tracking for Gmail — clicks and replies first.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#eef1f6",

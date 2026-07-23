@@ -15,8 +15,8 @@ export default function InstallPage() {
         <p className="eyebrow">Setup</p>
         <h1>From zero to first signal</h1>
         <p className="lede" style={{ marginBottom: 0 }}>
-          Four steps. Sign in on our domain, then track from Gmail. No API token
-          to paste.
+          Four steps. Sign in on our domain, then track important 1:1 mail from
+          Gmail. No API token to paste. No forced branding footer on send.
         </p>
       </header>
 

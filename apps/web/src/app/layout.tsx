@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
- title: "TrackPixl: engagement-first email tracking",
- description:
- "For freelancers on Gmail: know when clients click and reply, without noisy open-rate chrome.",
+  title: "TrackPixl: engagement-first email tracking for Gmail",
+  description:
+    "Know if they engaged — clicks and replies first. No forced branding. Quiet Gmail tracking for important 1:1 email.",
  icons: {
  icon: [
  { url: "/favicon.svg", type: "image/svg+xml" },

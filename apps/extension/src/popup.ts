@@ -36,7 +36,7 @@ async function refreshAuth() {
     signIn.hidden = true;
     signOut.hidden = false;
     authHint.textContent =
-      "Ready. In Gmail, leave Track on and send. We inject open and click tracking on our domain.";
+      "Ready. In Gmail, leave Track on and send. Clicks & replies lead; no forced footer.";
   } else {
     authPill.textContent = "Not signed in";
     authPill.className = "pill off";
