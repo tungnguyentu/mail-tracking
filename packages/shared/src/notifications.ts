@@ -5,6 +5,8 @@ export type NotificationPrefs = {
   notifyOnOpen: boolean;
   notifyOnClick: boolean;
   notifyOnReply: boolean;
+  /** Silence follow-up bump after N quiet days (coach). */
+  notifyOnSilence: boolean;
 };
 
 /** Default product prefs: clicks + replies only (engagement-first). */
@@ -13,7 +15,13 @@ export const DEFAULT_NOTIFICATION_PREFS: NotificationPrefs = {
   notifyOnOpen: false,
   notifyOnClick: true,
   notifyOnReply: true,
+  notifyOnSilence: true,
 };
+
+/** Whether silence coach notifications may fire. */
+export function shouldNotifySilence(prefs: NotificationPrefs): boolean {
+  return prefs.notificationsEnabled && prefs.notifyOnSilence;
+}
 
 export function shouldNotifyForEvent(
   type: EventType,

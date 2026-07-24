@@ -57,6 +57,7 @@ export const UserSettingsSchema = z.object({
   notifyOnOpen: z.boolean().default(false),
   notifyOnClick: z.boolean().default(true),
   notifyOnReply: z.boolean().default(true),
+  notifyOnSilence: z.boolean().default(true),
 });
 export type UserSettings = z.infer<typeof UserSettingsSchema>;
 

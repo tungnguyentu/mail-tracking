@@ -39,9 +39,20 @@ export {
 
 export {
   shouldNotifyForEvent,
+  shouldNotifySilence,
   DEFAULT_NOTIFICATION_PREFS,
   type NotificationPrefs,
 } from "./notifications.js";
+
+export {
+  SILENCE_DAYS_DEFAULT,
+  coachClickTemplate,
+  coachReplyTemplate,
+  coachSilenceTemplate,
+  isSilenceEligible,
+  type CoachPayload,
+  type SilenceSendSnapshot,
+} from "./coach.js";
 
 export {
   rankEngagementSignals,

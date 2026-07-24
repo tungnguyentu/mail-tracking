@@ -1,4 +1,9 @@
-import { DEFAULT_NOTIFICATION_PREFS } from "@trackpixl/shared";
+import {
+  DEFAULT_NOTIFICATION_PREFS,
+  isSilenceEligible,
+  shouldNotifySilence,
+  type NotificationPrefs,
+} from "@trackpixl/shared";
 import { SESSION_COOKIE } from "./config";
 import {
   ensureAuth,
@@ -11,21 +16,26 @@ import {
   createSend,
   fetchEventsSince,
   fetchMe,
+  fetchSends,
 } from "./lib/api";
-import { buildNotification } from "./lib/notify";
+import { buildNotification, buildSilenceNotification } from "./lib/notify";
 import { getPrefs, setPrefs } from "./lib/storage";
 
 const ALARM = "tp-poll-events";
 const AUTH_ALARM = "tp-sync-auth";
+const SILENCE_ALARM = "tp-silence-scan";
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.alarms.create(ALARM, { periodInMinutes: 0.5 });
   chrome.alarms.create(AUTH_ALARM, { periodInMinutes: 5 });
+  chrome.alarms.create(SILENCE_ALARM, { periodInMinutes: 60 * 12 });
   void syncAuthFromDomain();
 });
 
 chrome.runtime.onStartup?.addListener(() => {
   void syncAuthFromDomain();
+  // Ensure silence alarm exists after browser restart
+  chrome.alarms.create(SILENCE_ALARM, { periodInMinutes: 60 * 12 });
 });
 
 // When user finishes login on our domain, cookie appears — resync soon
@@ -42,6 +52,10 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
   if (alarm.name === ALARM) {
     await pollEvents();
+    return;
+  }
+  if (alarm.name === SILENCE_ALARM) {
+    await scanSilence();
   }
 });
 
@@ -71,6 +85,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       case "POLL_NOW":
         await pollEvents();
         return { ok: true };
+      case "SILENCE_SCAN_NOW":
+        await scanSilence();
+        return { ok: true };
       default:
         return { error: "unknown" };
     }
@@ -86,12 +103,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   return true;
 });
 
-async function pollEvents() {
-  const auth = await ensureAuth();
-  if (!auth.signedIn) return;
-
-  const prefs = await getPrefs();
-  let meSettings = DEFAULT_NOTIFICATION_PREFS;
+async function loadNotifyPrefs(): Promise<NotificationPrefs> {
+  let meSettings: NotificationPrefs = { ...DEFAULT_NOTIFICATION_PREFS };
   try {
     const me = await fetchMe();
     if (me?.settings) {
@@ -100,11 +113,23 @@ async function pollEvents() {
         notifyOnOpen: me.settings.notifyOnOpen,
         notifyOnClick: me.settings.notifyOnClick,
         notifyOnReply: me.settings.notifyOnReply,
+        notifyOnSilence:
+          me.settings.notifyOnSilence ??
+          DEFAULT_NOTIFICATION_PREFS.notifyOnSilence,
       };
     }
   } catch {
     /* keep defaults */
   }
+  return meSettings;
+}
+
+async function pollEvents() {
+  const auth = await ensureAuth();
+  if (!auth.signedIn) return;
+
+  const prefs = await getPrefs();
+  const meSettings = await loadNotifyPrefs();
 
   try {
     const { events, cursor } = await fetchEventsSince(prefs.eventCursor);
@@ -128,5 +153,53 @@ async function pollEvents() {
     });
   } catch (e) {
     console.warn("pollEvents", e);
+  }
+}
+
+/** One silence bump per send after N quiet days (no click/reply). */
+async function scanSilence() {
+  const auth = await ensureAuth();
+  if (!auth.signedIn) return;
+
+  const meSettings = await loadNotifyPrefs();
+  if (!shouldNotifySilence(meSettings)) return;
+
+  const prefs = await getPrefs();
+  const already = new Set(prefs.silenceNotifiedSendIds ?? []);
+
+  try {
+    const { sends } = await fetchSends();
+    const now = new Date();
+    for (const s of sends) {
+      if (already.has(s.id)) continue;
+      if (
+        !isSilenceEligible(
+          {
+            id: s.id,
+            createdAt: s.createdAt,
+            clickCount: s.clickCount,
+            replyCount: s.replyCount,
+          },
+          now,
+        )
+      ) {
+        continue;
+      }
+      const payload = buildSilenceNotification(s.subject);
+      if (chrome.notifications?.create) {
+        chrome.notifications.create(`silence-${s.id}`, {
+          type: "basic",
+          iconUrl: chrome.runtime.getURL("icon-128.png"),
+          title: payload.title,
+          message: payload.message,
+        });
+      }
+      already.add(s.id);
+    }
+    await setPrefs({
+      silenceNotifiedSendIds: [...already].slice(-300),
+    });
+  } catch (e) {
+    console.warn("scanSilence", e);
   }
 }

@@ -80,11 +80,29 @@ export async function fetchMe() {
         notifyOnOpen: boolean;
         notifyOnClick: boolean;
         notifyOnReply: boolean;
+        notifyOnSilence: boolean;
       };
     }>;
   } catch {
     return null;
   }
+}
+
+export async function fetchSends() {
+  const res = await fetch(`${API_BASE}/api/sends`, {
+    headers: await authHeaders(),
+  });
+  if (!res.ok) throw new Error(`sends failed: ${res.status}`);
+  return res.json() as Promise<{
+    sends: Array<{
+      id: string;
+      subject: string;
+      createdAt: string;
+      clickCount: number;
+      replyCount: number;
+      openCount: number;
+    }>;
+  }>;
 }
 
 export { API_BASE };

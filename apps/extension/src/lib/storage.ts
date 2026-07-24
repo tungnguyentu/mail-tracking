@@ -5,6 +5,8 @@ export type StickyPrefs = {
   userEmail?: string;
   eventCursor?: string;
   notifiedEventIds?: string[];
+  /** Send IDs already notified for silence bump (one-shot). */
+  silenceNotifiedSendIds?: string[];
 };
 
 const DEFAULTS: StickyPrefs = {

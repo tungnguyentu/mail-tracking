@@ -7,6 +7,7 @@ type Settings = {
   notifyOnOpen: boolean;
   notifyOnClick: boolean;
   notifyOnReply: boolean;
+  notifyOnSilence: boolean;
 };
 
 export function SettingsForm({ initial }: { initial: Settings }) {
@@ -44,7 +45,25 @@ export function SettingsForm({ initial }: { initial: Settings }) {
           Desktop notifications on
           <br />
           <span className="muted">
-            Defaults still favor clicks and replies over opens.
+            Defaults favor clicks and replies over noisy opens.
+          </span>
+        </span>
+      </label>
+      <label className="field" style={{ marginTop: "0.85rem" }}>
+        <input
+          type="checkbox"
+          checked={settings.notifyOnSilence}
+          disabled={!settings.notificationsEnabled}
+          onChange={(e) =>
+            save({ ...settings, notifyOnSilence: e.target.checked })
+          }
+        />
+        <span>
+          Suggest follow-up when quiet
+          <br />
+          <span className="muted">
+            After ~5 days with no click or reply, one bump reminder (does not
+            send mail).
           </span>
         </span>
       </label>
@@ -54,7 +73,10 @@ export function SettingsForm({ initial }: { initial: Settings }) {
         </p>
       )}
       {status === "error" && (
-        <p className="muted" style={{ margin: "0.75rem 0 0", color: "var(--danger)" }}>
+        <p
+          className="muted"
+          style={{ margin: "0.75rem 0 0", color: "var(--danger)" }}
+        >
           Couldn’t save. Try again.
         </p>
       )}

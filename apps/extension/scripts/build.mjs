@@ -45,7 +45,7 @@ const manifest = {
   name: "TrackPixl",
   version: "0.2.0",
   description:
-    "Engagement-first Gmail tracking via trackpixl.click — opens, clicks, no token paste.",
+    "Engagement-first Gmail tracking — clicks & replies first, no forced branding.",
   icons,
   permissions: ["storage", "alarms", "notifications", "cookies", "tabs"],
   host_permissions: ["https://mail.google.com/*", hostPermission],

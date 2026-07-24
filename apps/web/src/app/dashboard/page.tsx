@@ -38,6 +38,7 @@ export default async function DashboardPage() {
  notifyOnOpen: user.notifyOnOpen,
  notifyOnClick: user.notifyOnClick,
  notifyOnReply: user.notifyOnReply,
+ notifyOnSilence: user.notifyOnSilence,
  }}
  />
 
@@ -86,7 +87,7 @@ export default async function DashboardPage() {
  </span>
  )}
  {s.primarySignal === "none" && (
- <span className="muted">Waiting for engagement</span>
+ <span className="muted">Waiting for a click or reply</span>
  )}
  </div>
  </article>

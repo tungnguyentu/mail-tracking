@@ -8,6 +8,7 @@ const Body = z.object({
   notifyOnOpen: z.boolean().optional(),
   notifyOnClick: z.boolean().optional(),
   notifyOnReply: z.boolean().optional(),
+  notifyOnSilence: z.boolean().optional(),
 });
 
 export async function PATCH(req: Request) {
@@ -28,5 +29,6 @@ export async function PATCH(req: Request) {
     notifyOnOpen: updated.notifyOnOpen,
     notifyOnClick: updated.notifyOnClick,
     notifyOnReply: updated.notifyOnReply,
+    notifyOnSilence: updated.notifyOnSilence,
   });
 }

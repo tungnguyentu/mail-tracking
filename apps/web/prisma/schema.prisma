@@ -21,6 +21,7 @@ model User {
   notifyOnOpen          Boolean  @default(false)
   notifyOnClick         Boolean  @default(true)
   notifyOnReply         Boolean  @default(true)
+  notifyOnSilence       Boolean  @default(true)
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   sessions              Session[]

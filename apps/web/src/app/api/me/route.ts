@@ -15,6 +15,7 @@ export async function GET(req: Request) {
       notifyOnOpen: user.notifyOnOpen,
       notifyOnClick: user.notifyOnClick,
       notifyOnReply: user.notifyOnReply,
+      notifyOnSilence: user.notifyOnSilence,
     },
   });
 }

@@ -1,4 +1,7 @@
 import {
+  coachClickTemplate,
+  coachReplyTemplate,
+  coachSilenceTemplate,
   shouldNotifyForEvent,
   type EventType,
   type NotificationPrefs,
@@ -11,19 +14,23 @@ export function buildNotification(
 ): { title: string; message: string } | null {
   if (!shouldNotifyForEvent(type, prefs)) return null;
   if (type === "click") {
-    return {
-      title: "Link clicked",
-      message: subject || "Someone clicked a link in your email",
-    };
+    return coachClickTemplate(subject);
   }
   if (type === "reply") {
-    return {
-      title: "Reply received",
-      message: subject || "Someone replied to your tracked email",
-    };
+    return coachReplyTemplate(subject);
   }
+  // open — rare (default off); keep humble wording
   return {
     title: "Possible open",
-    message: subject || "A possible open was recorded (noisy)",
+    message: subject.trim()
+      ? `A possible open on ${subject.trim()} (noisy — prefer click/reply)`
+      : "A possible open was recorded (noisy — prefer click/reply)",
   };
+}
+
+export function buildSilenceNotification(subject: string): {
+  title: string;
+  message: string;
+} {
+  return coachSilenceTemplate(subject);
 }
